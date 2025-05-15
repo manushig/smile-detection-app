@@ -1,5 +1,3 @@
-# File: backend/app/main.py
-
 from fastapi import FastAPI
 from app.routes import detect
 from app.logger import setup_logger
