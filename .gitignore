@@ -1,0 +1,7 @@
+__pycache__/
+*.pyc
+/backend/poetry.lock
+/backend/smiles.db
+/frontend/node_modules/
+.vscode/
+*.env
