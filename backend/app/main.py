@@ -2,6 +2,10 @@
 
 from fastapi import FastAPI
 from app.routes import detect
+from app.logger import setup_logger
+
+# Initialize logging once on app startup
+setup_logger()
 
 # Initialize the FastAPI app
 app = FastAPI(
