@@ -33,11 +33,8 @@ poetry install
 ### ▶️ Run Locally
 
 ```bash
-# Activate the environment
-poetry shell
-
-# Start the FastAPI server
-uvicorn app.main:app --reload
+# Start the FastAPI server using Poetry
+poetry run uvicorn app.main:app --reload
 ```
 
 ---
