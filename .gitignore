@@ -1,7 +1,20 @@
+# Python cache and compiled files
 __pycache__/
 *.pyc
+
+# Poetry lock file and local DB
 /backend/poetry.lock
 /backend/smiles.db
+
+# Frontend dependencies
 /frontend/node_modules/
-.vscode/
+
+# Environment files
 *.env
+
+# VS Code settings
+.vscode/
+
+# Logs and system files
+*.log
+.DS_Store
