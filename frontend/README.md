@@ -1,70 +1,83 @@
-# Getting Started with Create React App
+# Smile Detection Frontend
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A React-based user interface for real-time smile detection.  
+Connects to a Python backend (REST API) for image analysis and shows results live.
 
-## Available Scripts
+---
 
-In the project directory, you can run:
+## Features
 
-### `npm start`
+- **Start/Stop Smile Detection**: Simple interface for initiating or stopping detection.
+- **Model Selection**: Switch between multiple backend detection models (OpenCV, Dlib).
+- **Live Image Display**: See the latest frame with bounding boxes for detected smiles.
+- **Smile Coordinates**: View detailed coordinates of detected smile regions.
+- **Robust Error Handling**: User-friendly messages for errors or connectivity issues.
+- **Extensive Unit Tests**: >90% test coverage with Jest and React Testing Library.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+---
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## Setup Instructions
 
-### `npm test`
+### 1. Prerequisites
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+- Node.js (v18+ recommended)
+- npm (v9+ recommended)
 
-### `npm run build`
+### 2. Installation
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+```bash
+cd frontend
+npm install
+```
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+### 3. Configure API Endpoint
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+Create a `.env` file in the `/frontend` directory to set the backend API URL:
 
-### `npm run eject`
+```
+REACT_APP_API_URL=http://localhost:8000
+```
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+> By default, it falls back to `http://localhost:8000` if not set.
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+### 4. Run Locally
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+```bash
+npm start
+```
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+App runs at [http://localhost:3000](http://localhost:3000).
 
-## Learn More
+---
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+## Testing
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+### Run All Tests
 
-### Code Splitting
+```bash
+npm test
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+### View Coverage Report
 
-### Analyzing the Bundle Size
+```bash
+npx react-scripts test --coverage --watchAll=false
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+Coverage report is saved in `frontend/coverage/` (open `index.html` for a visual report).
 
-### Making a Progressive Web App
+---
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+## Tech Stack
 
-### Advanced Configuration
+- [React](https://reactjs.org/) (v18+)
+- [Axios](https://axios-http.com/) for backend API calls
+- [Jest](https://jestjs.io/) & [React Testing Library](https://testing-library.com/) for testing
+- [CSS Modules](https://css-tricks.com/css-modules-part-1-need/) (or plain CSS)
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+---
 
-### Deployment
+## 👩‍💻 Author
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+**Manushi**
+[GitHub](https://github.com/manushig) | [LinkedIn](https://linkedin.com/in/manushi-g)
