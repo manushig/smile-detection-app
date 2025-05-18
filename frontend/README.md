@@ -77,7 +77,7 @@ Coverage report is saved in `frontend/coverage/` (open `index.html` for a visual
 
 ---
 
-## 👩‍💻 Author
+## Author
 
 **Manushi**
 [GitHub](https://github.com/manushig) | [LinkedIn](https://linkedin.com/in/manushi-g)
