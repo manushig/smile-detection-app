@@ -4,7 +4,7 @@ import axios from "axios";
  * Base URL for the backend smile detection API.
  * In production, this should be set using environment variables (e.g., process.env.REACT_APP_API_URL).
  */
-const BASE_URL = "http://localhost:8000";
+const BASE_URL = process.env.REACT_APP_API_URL || "http://localhost:8000";
 
 /**
  * Validates response status codes from the smile detection API.
