@@ -19,13 +19,15 @@ def test_detect_camera_unavailable(monkeypatch):
     assert response.status_code == 204
     assert response.json() == {"smile_detected": False}
 
+
 def test_detect_internal_error(monkeypatch):
-    from app.services import smile_detector
+    import app.routes.detect
 
     def raise_exception():
         raise RuntimeError("Mock error")
 
-    monkeypatch.setattr(smile_detector, "detect_smile_and_save", raise_exception)
+    monkeypatch.setattr(app.routes.detect, "detect_smile_and_save", raise_exception)
+
     response = client.get("/detect")
     assert response.status_code == 500
     assert response.json() == {"error": "Smile detection failed."}
