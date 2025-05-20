@@ -82,35 +82,20 @@ Below is a step-by-step overview of the key API endpoints and their flow:
 
 ```
 smile-detection-app/
-├── backend/
-│   ├── app/
-│   │   ├── main.py                # FastAPI app entrypoint
-│   │   ├── logger.py              # Logging setup
-│   │   ├── routes/
-│   │   │   └── camera.py          # API endpoints (start, stop, detect)
-│   │   ├── services/
-│   │   │   ├── camera_manager.py  # Webcam session/background capture
-│   │   │   └── smile_detector.py  # Smile detection logic (OpenCV)
-│   │   ├── models/
-│   │   │   └── detection_event.py # SQLite and image-saving utilities
-│   ├── detected_smiles/           # Saved smile images
-│   ├── smiles.db                  # Detection logs (SQLite DB)
-│   ├── app.log                    # Backend log file
-│   ├── tests/                     # Pytest unit/integration tests
-│   ├── pyproject.toml             # Poetry config
-│   └── .env                       # Backend config (optional)
-├── frontend/
-│   ├── public/
-│   ├── src/
-│   │   ├── api/                   # Backend API client & tests
-│   │   ├── components/            # React UI components & tests
-│   │   ├── App.js, App.test.js    # Main app & tests
-│   │   ├── index.js, index.css
-│   ├── .env                       # Frontend config (optional)
-│   ├── package.json
-│   ├── README.md
-│   └── ...
-└── README.md                      # (This file)
+  ├── backend/
+  │   ├── app/
+  │   ├── detected_smiles/
+  │   ├── migrations/
+  │   ├── tests/
+  │   ├── app.log
+  │   ├── smiles.db
+  │   ├── ...
+  ├── frontend/
+  │   ├── src/
+  │   ├── public/
+  │   ├── ...
+  ├── documents/           # Diagrams, screenshots, etc.
+  ├── README.md            # This file
 ```
 
 ---

@@ -112,18 +112,20 @@ npx react-scripts test --coverage --watchAll=false
 ```
 frontend/
   ├── src/
-  │   ├── api/              # API client and tests
+  │   ├── api/                  # API client and tests
+  │   │   ├── SmileApi.js
+  │   │   ├── SmileApi.test.js
   │   ├── components/
   │   │   ├── SmileDetails.js
   │   │   ├── SmileDetails.test.js
   │   │   ├── SmileViewer.js
   │   │   ├── SmileViewer.test.js
-  │   ├── App.js            # Main App UI
-  │   ├── App.test.js       # Main integration/UI tests
-  │   ├── index.js, index.css
-  ├── .env.example          # Example environment file
+  │   ├── App.js                # Main App UI
+  │   ├── App.test.js           # Main integration/UI tests
+  │   ├── index.js, index.css   # Main entry point & global styles
+  ├── .env                      # Example environment file
   ├── package.json
-  ├── README.md
+  ├── README.md                 # This file
 ```
 
 ---
