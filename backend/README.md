@@ -127,7 +127,7 @@ Smile detection events are persisted in `smiles.db` as follows:
 ## ER Diagram
 
 <p align="center">
-  <img src="./documents/ER_Diagram.png" alt="ER Diagram" width="700"/>
+  <img src="../documents/ER_Diagram.png" alt="ER Diagram" width="700"/>
 </p>
 
 ---
