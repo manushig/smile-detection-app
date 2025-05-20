@@ -117,11 +117,40 @@ smile-detection-app/
 
 ## Prerequisites
 
-- **Node.js** (v18+ recommended)
-- **npm** (v9+ recommended)
-- **Python** (v3.10+)
-- **Poetry** (for backend dependency management)
-- A computer with a webcam
+> **Please install these tools _before_ running the project.**
+
+### 1. **Python (3.10+)**
+
+- Download from: [python.org](https://www.python.org/downloads/)
+- **Note:** Python 3.10 or newer is required.  
+  (Check your version: `python --version`)
+
+### 2. **Poetry** (for backend dependency management)
+
+- Install via pip:
+  ```bash
+  pip install poetry
+  ```
+
+````
+
+* Official docs: [python-poetry.org/docs/#installation](https://python-poetry.org/docs/#installation)
+
+### 3. **Node.js (with npm)** (for frontend)
+
+* Download and install from: [nodejs.org](https://nodejs.org/)
+* Choose the **LTS version** (Recommended for Most Users).
+* After installing, check with:
+
+  ```bash
+  node -v
+  npm -v
+  ```
+* **npm** (Node Package Manager) is included with Node.js.
+
+### 4. **A computer with a webcam**
+
+* (Required for real-time smile detection.)
 
 ---
 
@@ -242,3 +271,6 @@ poetry run pytest    # Runs all Pytest unit and integration tests
 _For any questions or issues, please open an issue on GitHub or contact the author directly._
 
 ---
+
+
+````
