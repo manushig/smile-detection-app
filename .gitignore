@@ -19,9 +19,5 @@ __pycache__/
 *.log
 .DS_Store
 
-# Ignore all images except small, illustrative examples
-input_images/
-output_images/
-*.jpg
-*.jpeg
-*.png
+# Ignore all generated smile images 
+/backend/detected_smiles/
