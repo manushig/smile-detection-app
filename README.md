@@ -117,25 +117,24 @@ smile-detection-app/
   pip install poetry
   ```
 
-````
-
 * Official docs: [python-poetry.org/docs/#installation](https://python-poetry.org/docs/#installation)
 
 ### 3. **Node.js (with npm)** (for frontend)
 
-* Download and install from: [nodejs.org](https://nodejs.org/)
-* Choose the **LTS version** (Recommended for Most Users).
-* After installing, check with:
+- Download and install from: [nodejs.org](https://nodejs.org/)
+- Choose the **LTS version** (Recommended for Most Users).
+- After installing, check with:
 
   ```bash
   node -v
   npm -v
   ```
-* **npm** (Node Package Manager) is included with Node.js.
+
+- **npm** (Node Package Manager) is included with Node.js.
 
 ### 4. **A computer with a webcam**
 
-* (Required for real-time smile detection.)
+- (Required for real-time smile detection.)
 
 ---
 
@@ -257,5 +256,6 @@ _For any questions or issues, please open an issue on GitHub or contact the auth
 
 ---
 
+```
 
-````
+```
