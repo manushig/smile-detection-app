@@ -174,6 +174,33 @@ poetry run pytest
 
 ---
 
+## Project Structure
+
+```
+backend/
+  ├── app/
+  │   ├── main.py                    # FastAPI app entrypoint
+  │   ├── logger.py                  # Logging setup
+  │   ├── app
+  │   │   ├── models/
+  │   │   │   └── detection_event.py # SQLite and image-saving utilities
+  │   │   ├── routes/
+  │   │   │   └── camera.py          # API endpoints (start, stop, detect)
+  │   │   ├── services/
+  │   │   │   ├── camera_manager.py  # Webcam session/background capture
+  │   │   │   └── smile_detector.py  # Smile detection logic (OpenCV)
+  ├── detected_smiles/               # Saved smile images
+  ├── migrations/                    # Saved migration file
+  ├── tests/                         # Pytest unit/integration tests
+  ├── .env                           # Backend config (optional)
+  ├── app.log                        # Backend log file
+  ├── pyproject.toml                 # Poetry config
+  ├── README.md                      # This file
+  ├── smiles.db                      # Detection logs (SQLite DB)
+```
+
+---
+
 ## Tech Stack
 
 - **Framework:** FastAPI (Python 3.10+)
