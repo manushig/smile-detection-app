@@ -16,6 +16,13 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
+  "jest": {
+    "coveragePathIgnorePatterns": [
+      "/node_modules/",
+      "src/index.js",
+      "src/reportWebVitals.js"
+    ]
+  },
   "eslintConfig": {
     "extends": [
       "react-app",
