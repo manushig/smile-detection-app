@@ -101,3 +101,38 @@ button[disabled] {
   margin-bottom: 18px;
   font-size: 2em;
 }
+
+.spinner-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(255, 255, 255, 0.7); /* semi-transparent white */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+.loader,
+.loader:after {
+  border-radius: 50%;
+  width: 4em;
+  height: 4em;
+}
+.loader {
+  border-top: 0.5em solid #999;
+  border-right: 0.5em solid #ddd;
+  border-bottom: 0.5em solid #ddd;
+  border-left: 0.5em solid #222;
+  animation: load8 1s infinite linear;
+}
+@keyframes load8 {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}

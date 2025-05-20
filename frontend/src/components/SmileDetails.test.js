@@ -1,79 +1,113 @@
 /**
- * SmileDetails component Tests.
+ * SmileDetails component tests.
  *
- * Covers all rendering cases for smile detection region and fallback message.
+ * - Covers all rendering cases: object, array, empty, and invalid coords.
+ * - Verifies "smile detected" and fallback messages.
+ * - Follows professional commenting and docstring style.
  */
 
 import React from "react";
 import { render, screen } from "@testing-library/react";
 import SmileDetails from "./SmileDetails";
 
-//
-// Tests for SmileDetails rendering logic
-//
 describe("SmileDetails", () => {
   /**
-   * Should display "No smile detected yet" if no smile detected and coords is null.
+   * Should show "No smile detected yet" if smileDetected is false and coords is null.
    */
-  it('shows "No smile detected yet" if no smile', () => {
+  it('shows "No smile detected yet" for smileDetected=false and coords=null', () => {
     render(<SmileDetails coords={null} smileDetected={false} />);
     expect(screen.getByText(/no smile detected yet/i)).toBeInTheDocument();
   });
 
   /**
-   * Should show region for smile when coords is an array.
+   * Should show "No smile detected yet" if smileDetected is false and coords is present.
    */
-  it("shows region when smile is detected (array coords)", () => {
-    const coords = [{ x: 100, y: 200, w: 50, h: 20 }];
-    render(<SmileDetails coords={coords} smileDetected={true} />);
-    expect(
-      screen.getByText(/region: \[100, 200\] — 50×20 px/i)
-    ).toBeInTheDocument();
-  });
-
-  /**
-   * Should show region for smile when coords is an object.
-   */
-  it("shows region when smile is detected (object coords)", () => {
-    const coords = { x: 1, y: 2, w: 3, h: 4 };
-    render(<SmileDetails coords={coords} smileDetected={true} />);
-    expect(screen.getByText(/region: \[1, 2\] — 3×4 px/i)).toBeInTheDocument();
-  });
-
-  /**
-   * Should fallback to placeholder if coords is empty array.
-   */
-  it("shows 'No smile detected yet' if coords is empty array", () => {
-    render(<SmileDetails coords={[]} smileDetected={true} />);
-    expect(screen.getByText(/no smile detected yet/i)).toBeInTheDocument();
-  });
-
-  /**
-   * Should fallback to placeholder if smileDetected true but coords is undefined.
-   */
-  it("shows 'No smile detected yet' if smileDetected true but coords undefined", () => {
-    render(<SmileDetails coords={undefined} smileDetected={true} />);
-    expect(screen.getByText(/no smile detected yet/i)).toBeInTheDocument();
-  });
-
-  /**
-   * Should fallback to placeholder if smileDetected is false even when coords present.
-   */
-  it("shows 'No smile detected yet' if smileDetected false even with coords", () => {
+  it('shows "No smile detected yet" for smileDetected=false even if coords present', () => {
     render(
-      <SmileDetails
-        coords={[{ x: 10, y: 10, w: 10, h: 10 }]}
-        smileDetected={false}
-      />
+      <SmileDetails coords={{ x: 1, y: 2, w: 3, h: 4 }} smileDetected={false} />
     );
     expect(screen.getByText(/no smile detected yet/i)).toBeInTheDocument();
   });
 
   /**
-   * Should fallback to placeholder if coords is unrelated type (e.g., string).
+   * Should show "No smile detected yet" if coords is undefined.
    */
-  it("shows 'No smile detected yet' if coords is unrelated type", () => {
-    render(<SmileDetails coords="string value" smileDetected={true} />);
+  it('shows "No smile detected yet" for smileDetected=true but coords is undefined', () => {
+    render(<SmileDetails coords={undefined} smileDetected={true} />);
+    expect(screen.getByText(/no smile detected yet/i)).toBeInTheDocument();
+  });
+
+  /**
+   * Should show "No smile detected yet" if coords is an empty array.
+   */
+  it('shows "No smile detected yet" for smileDetected=true but coords is empty array', () => {
+    render(<SmileDetails coords={[]} smileDetected={true} />);
+    expect(screen.getByText(/no smile detected yet/i)).toBeInTheDocument();
+  });
+
+  /**
+   * Should show "No smile detected yet" if coords is an unrelated type (like a string).
+   */
+  it('shows "No smile detected yet" for smileDetected=true but coords is a string', () => {
+    render(<SmileDetails coords={"invalid"} smileDetected={true} />);
+    expect(screen.getByText(/no smile detected yet/i)).toBeInTheDocument();
+  });
+
+  /**
+   * Should show "Smile detected!" and the region when coords is a single object.
+   */
+  it('shows "Smile detected!" and region string for object coords', () => {
+    render(
+      <SmileDetails
+        coords={{ x: 5, y: 10, w: 20, h: 8 }}
+        smileDetected={true}
+      />
+    );
+    expect(screen.getByText(/😊 smile detected!/i)).toBeInTheDocument();
+    expect(
+      screen.getByText(/region: \[5, 10\] — 20×8 px/i)
+    ).toBeInTheDocument();
+  });
+
+  /**
+   * Should show "Smile detected!" and regions for coords as array with one box.
+   */
+  it('shows "Smile detected!" and region string for single array coords', () => {
+    render(
+      <SmileDetails
+        coords={[{ x: 7, y: 9, w: 14, h: 18 }]}
+        smileDetected={true}
+      />
+    );
+    expect(screen.getByText(/😊 smile detected!/i)).toBeInTheDocument();
+    expect(
+      screen.getByText(/region 1: \[7, 9\] — 14×18 px/i)
+    ).toBeInTheDocument();
+  });
+
+  /**
+   * Should show all region strings for array of multiple boxes.
+   */
+  it("shows all region strings for multiple array coords", () => {
+    const coords = [
+      { x: 1, y: 2, w: 3, h: 4 },
+      { x: 5, y: 6, w: 7, h: 8 },
+    ];
+    render(<SmileDetails coords={coords} smileDetected={true} />);
+    expect(screen.getByText(/😊 smile detected!/i)).toBeInTheDocument();
+    expect(
+      screen.getByText(/region 1: \[1, 2\] — 3×4 px/i)
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText(/region 2: \[5, 6\] — 7×8 px/i)
+    ).toBeInTheDocument();
+  });
+
+  /**
+   * Should not render region info if coords is a malformed object (missing keys).
+   */
+  it('shows "No smile detected yet" for malformed object coords', () => {
+    render(<SmileDetails coords={{ x: 1, y: 2 }} smileDetected={true} />);
     expect(screen.getByText(/no smile detected yet/i)).toBeInTheDocument();
   });
 });

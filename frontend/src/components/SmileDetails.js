@@ -1,16 +1,18 @@
 import React from "react";
 
 /**
- * Formats the bounding box/region information for display.
- * Accepts either an array with an object (from Haar cascade output) or a plain object.
+ * Formats bounding box/region information for display.
+ * Handles arrays (for multiple boxes) and single object.
  *
- * @param {Object|Array|null} coords - Detected smile bounding box, array or object, or null.
- * @returns {string|null} Formatted region string, or null if coords are invalid.
+ * @param {Object|Array|null} coords - Detected bounding boxes or null.
+ * @returns {string[]} Array of formatted region strings (empty if invalid).
  */
 function formatRegion(coords) {
   if (Array.isArray(coords) && coords.length > 0) {
-    const box = coords[0];
-    return `Region: [${box.x}, ${box.y}] — ${box.w}×${box.h} px`;
+    return coords.map(
+      (box, idx) =>
+        `Region ${idx + 1}: [${box.x}, ${box.y}] — ${box.w}×${box.h} px`
+    );
   }
   if (
     coords &&
@@ -20,26 +22,32 @@ function formatRegion(coords) {
     "w" in coords &&
     "h" in coords
   ) {
-    return `Region: [${coords.x}, ${coords.y}] — ${coords.w}×${coords.h} px`;
+    return [`Region: [${coords.x}, ${coords.y}] — ${coords.w}×${coords.h} px`];
   }
-  return null;
+  return [];
 }
 
 /**
- * SmileDetails
+ * SmileDetails component
+ * Displays smile detection result regions or fallback if not detected.
+ *
  * @param {Object} props
- * @param {Object|Array|null} props.coords - Coordinates for smile bounding box, or null.
- * @param {boolean} props.smileDetected - Whether a smile was detected in the current image.
+ * @param {Object|Array|null} props.coords - Smile bounding box(es), or null.
+ * @param {boolean} props.smileDetected - Whether smile(s) detected in image.
  */
 function SmileDetails({ coords, smileDetected }) {
-  const regionString = formatRegion(coords);
+  const regionStrings = formatRegion(coords);
 
   return (
     <div className="smile-details-wide">
-      {smileDetected && regionString ? (
+      {smileDetected && regionStrings.length > 0 ? (
         <>
           <h2 className="smile-detected-header">😊 Smile detected!</h2>
-          <div className="smile-region-info">{regionString}</div>
+          <div className="smile-region-info">
+            {regionStrings.map((str, i) => (
+              <div key={i}>{str}</div>
+            ))}
+          </div>
         </>
       ) : (
         <div className="no-smile-message">No smile detected yet</div>

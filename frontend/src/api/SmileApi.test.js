@@ -1,37 +1,108 @@
 /**
- * Smile detection API client Tests.
+ * Smile detection API client tests.
+ *
+ * - Covers all functions and error branches in SmileApi.js.
+ * - Mocks axios for reliable and isolated testing.
+ * - Provides professional docstrings and line comments.
  */
 
 import axios from "axios";
-import { fetchSmileDetection, validateSmileStatus } from "./SmileApi";
+import {
+  startCamera,
+  stopCamera,
+  fetchSmileDetection,
+  validateSmileStatus,
+} from "./SmileApi";
 
-// Mock axios to prevent actual HTTP requests and control responses
+// Mock axios globally for this test suite
 jest.mock("axios");
+
+//
+// Tests for startCamera
+//
+describe("startCamera", () => {
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
+  /**
+   * Should call /start_camera and return data on success.
+   */
+  it("calls /start_camera and returns backend data", async () => {
+    const mockData = { ok: true };
+    axios.post.mockResolvedValue({ data: mockData });
+
+    const result = await startCamera();
+
+    expect(axios.post).toHaveBeenCalledWith(
+      expect.stringContaining("/start_camera")
+    );
+    expect(result).toBe(mockData);
+  });
+
+  /**
+   * Should propagate backend/network errors for UI to handle.
+   */
+  it("throws on network/backend error", async () => {
+    axios.post.mockRejectedValue(new Error("fail"));
+
+    await expect(startCamera()).rejects.toThrow("fail");
+  });
+});
+
+//
+// Tests for stopCamera
+//
+describe("stopCamera", () => {
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
+  /**
+   * Should call /stop_camera and return data on success.
+   */
+  it("calls /stop_camera and returns backend data", async () => {
+    const mockData = { stopped: true };
+    axios.post.mockResolvedValue({ data: mockData });
+
+    const result = await stopCamera();
+
+    expect(axios.post).toHaveBeenCalledWith(
+      expect.stringContaining("/stop_camera")
+    );
+    expect(result).toBe(mockData);
+  });
+
+  /**
+   * Should propagate backend/network errors for UI to handle.
+   */
+  it("throws on network/backend error", async () => {
+    axios.post.mockRejectedValue(new Error("fail"));
+
+    await expect(stopCamera()).rejects.toThrow("fail");
+  });
+});
 
 //
 // Tests for validateSmileStatus utility
 //
 describe("validateSmileStatus", () => {
-  // Should return true for accepted statuses
-  it("returns true for 200", () => {
+  /**
+   * Should return true for valid status codes.
+   */
+  it("returns true for 200, 204, 500", () => {
     expect(validateSmileStatus(200)).toBe(true);
-  });
-
-  it("returns true for 204", () => {
     expect(validateSmileStatus(204)).toBe(true);
-  });
-
-  it("returns true for 500", () => {
     expect(validateSmileStatus(500)).toBe(true);
   });
 
-  // Should return false for unexpected statuses
-  it("returns false for 404", () => {
+  /**
+   * Should return false for unexpected codes.
+   */
+  it("returns false for other status codes", () => {
     expect(validateSmileStatus(404)).toBe(false);
-  });
-
-  it("returns false for 400", () => {
     expect(validateSmileStatus(400)).toBe(false);
+    expect(validateSmileStatus(201)).toBe(false);
   });
 });
 
@@ -45,55 +116,30 @@ describe("fetchSmileDetection", () => {
   });
 
   /**
-   * Should call /detect/opencv if model is not 'dlib'
+   * Should call /detect_smile and return response on success.
    */
-  it("calls /detect/opencv by default", async () => {
-    axios.get.mockResolvedValue({ status: 200, data: "blob" });
+  it("calls /detect_smile and returns response", async () => {
+    const mockResponse = { status: 200, data: "blob" };
+    axios.get.mockResolvedValue(mockResponse);
 
-    await fetchSmileDetection("opencv");
+    const result = await fetchSmileDetection();
 
     expect(axios.get).toHaveBeenCalledWith(
-      expect.stringContaining("/detect/opencv"),
+      expect.stringContaining("/detect_smile"),
       expect.objectContaining({
         responseType: "blob",
         validateStatus: expect.any(Function),
       })
     );
+    expect(result).toBe(mockResponse);
   });
 
   /**
-   * Should call /detect/dlib if model is 'dlib'
+   * Should propagate errors thrown by axios (network/backend error).
    */
-  it("calls /detect/dlib if model is 'dlib'", async () => {
-    axios.get.mockResolvedValue({ status: 200, data: "blob" });
-
-    await fetchSmileDetection("dlib");
-
-    expect(axios.get).toHaveBeenCalledWith(
-      expect.stringContaining("/detect/dlib"),
-      expect.any(Object)
-    );
-  });
-
-  /**
-   * Should resolve with the response when axios call is successful
-   */
-  it("returns response on success", async () => {
-    const mockResponse = { status: 200, data: "blob" };
-    axios.get.mockResolvedValue(mockResponse);
-
-    const response = await fetchSmileDetection("opencv");
-    expect(response).toBe(mockResponse);
-  });
-
-  /**
-   * Should propagate errors from axios (e.g., network error)
-   */
-  it("handles network errors", async () => {
+  it("throws on network/backend error", async () => {
     axios.get.mockRejectedValue(new Error("Network Error"));
 
-    await expect(fetchSmileDetection("opencv")).rejects.toThrow(
-      "Network Error"
-    );
+    await expect(fetchSmileDetection()).rejects.toThrow("Network Error");
   });
 });

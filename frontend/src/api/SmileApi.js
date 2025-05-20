@@ -7,6 +7,35 @@ import axios from "axios";
 const BASE_URL = process.env.REACT_APP_API_URL || "http://localhost:8000";
 
 /**
+ * Starts the camera on the backend.
+ * @returns {Promise<object>} Axios response from backend.
+ * @throws {Error} Network or backend error.
+ */
+export async function startCamera() {
+  try {
+    const response = await axios.post(`${BASE_URL}/start_camera`);
+    return response.data;
+  } catch (error) {
+    // Rethrow for UI handling
+    throw error;
+  }
+}
+
+/**
+ * Stops the camera on the backend.
+ * @returns {Promise<object>} Axios response from backend.
+ * @throws {Error} Network or backend error.
+ */
+export async function stopCamera() {
+  try {
+    const response = await axios.post(`${BASE_URL}/stop_camera`);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+}
+
+/**
  * Validates response status codes from the smile detection API.
  * Allows 200 (OK), 204 (No Content), and 500 (Internal Server Error) as "handled" responses.
  * @param {number} status - HTTP status code from the response
@@ -16,17 +45,18 @@ export const validateSmileStatus = (status) =>
   status === 200 || status === 204 || status === 500;
 
 /**
- * Calls the smile detection endpoint on the backend.
- *
- * @param {string} model - The model type to use for detection ("dlib" or "opencv").
- * @returns {Promise<object>} Axios response containing the smile detection result as a blob.
- * @throws {Error} Any error from the network or request.
+ * Polls the backend for smile detection on the current camera frame.
+ * @returns {Promise<object>} Axios response, including image blob and headers.
+ * @throws {Error} Network or backend error.
  */
-export const fetchSmileDetection = async (model) => {
-  const endpoint = model === "dlib" ? "/detect/dlib" : "/detect/opencv";
-  const url = `${BASE_URL}${endpoint}`;
-  return axios.get(url, {
-    responseType: "blob",
-    validateStatus: validateSmileStatus,
-  });
-};
+export async function fetchSmileDetection() {
+  try {
+    const response = await axios.get(`${BASE_URL}/detect_smile`, {
+      responseType: "blob",
+      validateStatus: validateSmileStatus,
+    });
+    return response;
+  } catch (error) {
+    throw error;
+  }
+}

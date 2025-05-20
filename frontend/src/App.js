@@ -1,42 +1,33 @@
 /**
  * Main Application Component for Smile Detection UI.
  *
- * - Handles polling of backend API for smile detection images and coordinates.
- * - Manages state for selected model, polling, result image, and feedback messages.
- * - Renders model selection, start/stop controls, live status, and result viewers.
- * - Integrates SmileViewer and SmileDetails child components for modularity.
+ * - Starts/stops camera session on backend.
+ * - Polls backend every second for smile detection.
+ * - Shows live feedback and handles network and API errors.
+ * - Displays a spinner overlay while starting the camera.
+ * - Cleans up Blob URLs to prevent memory leaks.
  */
 
 import React, { useState, useEffect, useRef } from "react";
 import SmileViewer from "./components/SmileViewer";
 import SmileDetails from "./components/SmileDetails";
-import { fetchSmileDetection } from "./api/SmileApi";
+import { startCamera, stopCamera, fetchSmileDetection } from "./api/SmileApi";
 import "./index.css";
 
-/**
- * Main React component for the Smile Detection App.
- * @returns {JSX.Element}
- */
 function App() {
-  // User-selected model ("opencv" or "dlib")
-  const [model, setModel] = useState("opencv");
-  // Indicates if smile detection polling is running
+  // App state
   const [detectionRunning, setDetectionRunning] = useState(false);
-  // Status message shown in the UI
+  const [loading, setLoading] = useState(false);
   const [statusMessage, setStatusMessage] = useState("Click 'Start' to begin.");
-  // Latest result image and smile coordinates
   const [imageSrc, setImageSrc] = useState(null);
   const [smileCoords, setSmileCoords] = useState(null);
-  // Stores last detected smile info for fallback display
   const [lastSmile, setLastSmile] = useState({ coords: null, image: null });
 
-  // Polling interval and in-flight request tracking
   const intervalRef = useRef(null);
   const inFlight = useRef(false);
 
   /**
-   * Side effect: Poll for smile detection when started.
-   * Polls every second as long as detectionRunning is true.
+   * Poll for smile detection every second when detectionRunning is true.
    */
   useEffect(() => {
     if (detectionRunning) {
@@ -46,47 +37,53 @@ function App() {
         }
       }, 1000);
     }
-    // Cleanup on stop
     return () => clearInterval(intervalRef.current);
-  }, [detectionRunning, model]);
+    // eslint-disable-next-line
+  }, [detectionRunning]);
 
   /**
-   * Calls the backend API to fetch smile detection results.
-   * Updates UI state based on HTTP status and data.
-   * - 200: Parse coordinates, update image, update last smile.
-   * - 204: No smile found, clears smileCoords but keeps lastSmile.
-   * - 500/other: Shows error.
+   * Handles polling for smile detection from backend.
+   * Updates image, coordinates, and UI status.
    */
   const handleSmileDetection = async () => {
     inFlight.current = true;
     try {
-      const response = await fetchSmileDetection(model);
+      const response = await fetchSmileDetection();
       if (!detectionRunning) return;
+
+      // Success: Smile detected
       if (response.status === 200) {
-        // Parse coordinates from header (supports both JSON and single-quoted fallback)
+        setStatusMessage("Keep smiling!");
         const coordsHeader = response.headers["x-smile-coords"];
         let coords = null;
         if (coordsHeader) {
           try {
             coords = JSON.parse(coordsHeader);
           } catch (e) {
+            // Fallback: sometimes backend returns single quotes
             try {
               coords = JSON.parse(coordsHeader.replace(/'/g, '"'));
             } catch {
-              coords = coordsHeader;
+              coords = coordsHeader; // fallback to raw string
             }
           }
         }
-        // Generate object URL for new image blob
         const newImage = URL.createObjectURL(response.data);
         setImageSrc(newImage);
         setSmileCoords(coords);
         setLastSmile({ coords, image: newImage });
-      } else if (response.status === 204) {
-        if (detectionRunning) {
-          setSmileCoords(null);
-        }
-      } else {
+      }
+      // No smile detected (204)
+      else if (response.status === 204) {
+        setStatusMessage("Keep smiling!");
+        setSmileCoords(null);
+      }
+      // Camera not started (409)
+      else if (response.status === 409) {
+        setStatusMessage("Camera not started. Click Start.");
+      }
+      // Error (500 or other)
+      else {
         setStatusMessage("Error occurred.");
       }
     } catch (error) {
@@ -97,67 +94,62 @@ function App() {
   };
 
   /**
-   * Handles model selection change (dropdown).
-   * @param {React.ChangeEvent<HTMLSelectElement>} e
+   * Starts camera session and polling for detection.
+   * Shows spinner overlay while starting.
    */
-  const handleModelChange = (e) => {
-    setModel(e.target.value);
-  };
-
-  /**
-   * Start smile detection polling and reset UI results.
-   * Called when user clicks 'Start'.
-   */
-  const startDetection = () => {
-    if (!detectionRunning) {
+  const handleStart = async () => {
+    setLoading(true);
+    setStatusMessage("Starting camera...");
+    try {
+      await startCamera();
       setImageSrc(null);
       setSmileCoords(null);
       setLastSmile({ coords: null, image: null });
       setStatusMessage("Keep smiling!");
+      setDetectionRunning(true);
+    } catch (error) {
+      setStatusMessage("Failed to start camera.");
+    } finally {
+      setLoading(false);
     }
-    setDetectionRunning(true);
   };
 
   /**
-   * Stop smile detection polling and update status message.
-   * Called when user clicks 'Stop'.
+   * Stops camera session and polling.
    */
-  const stopDetection = () => {
+  const handleStop = async () => {
     setDetectionRunning(false);
-    setStatusMessage("Click 'Start' to begin.");
     clearInterval(intervalRef.current);
+    setStatusMessage("Click 'Start' to begin.");
+    try {
+      await stopCamera();
+    } catch (error) {
+      // Optionally show an error, but do not block UI
+    }
   };
 
-  // Select which image/coordinates to display: prefer most recent, else fallback to lastSmile
+  // Use last smile if nothing detected in current polling session
   const displayImage = smileCoords ? imageSrc : lastSmile.image;
   const displayCoords = smileCoords ? smileCoords : lastSmile.coords;
   const smileDetected = !!displayCoords;
 
   return (
     <div className="main-app-card">
+      {/* Spinner overlay when loading */}
+      {loading && (
+        <div className="spinner-overlay">
+          <div className="loader" />
+        </div>
+      )}
+
       <h1>Smile Detection App</h1>
       <div className="controls-row" style={{ justifyContent: "space-between" }}>
-        {/* Model selection dropdown */}
-        <div>
-          <label htmlFor="modelSelect">
-            <b>Model:</b>{" "}
-          </label>
-          <select
-            id="modelSelect"
-            value={model}
-            onChange={handleModelChange}
-            disabled={detectionRunning}
-          >
-            <option value="opencv">OpenCV (Haar Cascade)</option>
-            <option value="dlib">Dlib (HOG)</option>
-          </select>
-        </div>
         {/* Start/Stop buttons */}
         <div>
-          <button onClick={startDetection} disabled={detectionRunning}>
+          <button onClick={handleStart} disabled={detectionRunning || loading}>
             Start
           </button>
-          <button onClick={stopDetection} disabled={!detectionRunning}>
+          <button onClick={handleStop} disabled={!detectionRunning || loading}>
             Stop
           </button>
         </div>
@@ -167,7 +159,6 @@ function App() {
         </div>
       </div>
       <div className="content-section-wider">
-        {/* Image viewer and details */}
         <SmileViewer imageSrc={displayImage} />
         <SmileDetails coords={displayCoords} smileDetected={smileDetected} />
       </div>
