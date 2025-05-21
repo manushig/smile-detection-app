@@ -10,7 +10,7 @@ The app allows users to start and stop smile detection, displays live webcam ima
 This project follows a modular, industry-standard architecture for clear separation of frontend, backend, and infrastructure layers:
 
 <p align="center">
-  <img src="./documents/Architecture_Diagram.png" alt="Architecture Diagram" width="700"/>
+  <img src="./documents/Architecture_Diagram.png" alt="Architecture Diagram" width="700"/> 
 </p>
 
 - **Frontend (React):** User interface running on `localhost:3000`
