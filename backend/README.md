@@ -127,7 +127,7 @@ Smile detection events are persisted in `smiles.db` as follows:
 ## ER Diagram
 
 <p align="center">
-  <img src="../documents/ER_Diagram.png" alt="ER Diagram" width="700"/>
+  <img src="../documents/ER_Diagram.png" alt="ER Diagram" width="300"/>
 </p>
 
 ---
@@ -212,10 +212,10 @@ backend/
 
 ---
 
-## Notes for Reviewers
+## Notes
 
 - Haar cascade files are included in OpenCV installation—no extra model setup is needed.
-- Smile detection is limited by the accuracy of Haar cascades. See "Known Issues" below for details.
+- Smile detection is limited by the accuracy of Haar cascades. See "Known Limitations of Haar Cascade Smile Detection" below for details.
 - All logs are saved in `backend/app.log`. Detection images are stored in `detected_smiles/`.
 - API endpoints and responses are fully documented in the OpenAPI schema ([/docs](http://localhost:8000/docs)).
 
@@ -264,128 +264,3 @@ Detection images and test artifacts can be found in the `detected_smiles/` direc
 **For any issues or feedback, please reach out via GitHub or LinkedIn.**
 
 ---
-
-Absolutely! Here’s a revised structure for your **README.md**—showing **“Smile Detection Parameters & False Positives”** as a **subsection** within the “Known Limitations” section.
-
----
-
-# Smile Detection Backend
-
-A robust FastAPI backend for real-time smile detection using OpenCV.
-Captures webcam images, detects smiles, overlays bounding boxes, returns annotated images, and logs each detection event (including saving image files and recording coordinates in SQLite).
-
----
-
-## Features
-
-- **RESTful API** with FastAPI
-- **Real-time smile detection** (OpenCV Haar cascades)
-- **Returns JPEG images** with bounding box overlay and smile coordinates in HTTP headers
-- **Logs detection events** to SQLite (`smiles.db`)
-- **Saves detected smile images** in a configurable folder
-- **Centralized logging** to console and `app.log`
-- **Pytest tests** (unit/integration)
-- **Configurable** via environment variables
-
----
-
-## Setup Instructions
-
-... _(installation steps as before)_
-
----
-
-## Running the Service
-
-... _(how to start server, API docs, etc.)_
-
----
-
-## API Endpoints
-
-... _(summarized as before)_
-
----
-
-## How It Works
-
-... _(API and app flow: start camera, detect, stop, error handling)_
-
----
-
-## Database Table Schema
-
-... _(detection table, ER diagram, migration script, if included)_
-
----
-
-## Project Structure
-
-... _(your directory tree and comments)_
-
----
-
-## Testing
-
-... _(pytest and test coverage notes)_
-
----
-
-## Tech Stack
-
-... _(FastAPI, OpenCV, SQLite, etc.)_
-
----
-
-## Notes for Reviewers
-
-... _(Haarcascades bundled, app.log, etc.)_
-
----
-
-## Known Limitations of Haar Cascade Smile Detection
-
-OpenCV’s [Haar cascades](https://docs.opencv.org/4.x/db/d28/tutorial_cascade_classifier.html) provide a simple, real-time way to detect faces and smiles, but have **important limitations**:
-
-- **Sensitive to lighting, head angle, and occlusions**
-- **False positives:** Non-mouth regions like nostrils, glasses, or shadows may trigger a “smile”
-- **False negatives:** Subtle or partially obscured smiles are often missed
-
-### Parameter Tuning to Reduce False Positives
-
-To mitigate some of these issues, we carefully tune several parameters. Here’s a quick guide:
-
-| Parameter      | Purpose                           | How it reduces false positives              |
-| -------------- | --------------------------------- | ------------------------------------------- |
-| scaleFactor    | Multi-scale detection granularity | Avoids duplicate/multi-scale false regions  |
-| minNeighbors   | Minimum "votes" for a region      | Ensures only strong, likely smiles are kept |
-| minSize        | Minimum size of detection         | Ignores noise, nostrils, small objects      |
-| aspect_ratio   | Smile shape constraint            | Filters out non-mouth, non-smile shapes     |
-| face threshold | Smile must be in mouth region     | Ensures detection is where the mouth is     |
-
-These filters are set empirically. For example, the app only accepts smile regions where `width/height > 1.8` and where the detected “smile” box is in the lower part of the face.
-
-> **Tip:** Despite these safeguards, Haarcascades can still be tricked in complex lighting or with facial accessories.
-
----
-
-## Example Output
-
-Detection images are saved in the `detected_smiles/` folder, with bounding boxes overlayed on the detected smiles.
-
----
-
-## Author
-
-**Manushi**
-[GitHub](https://github.com/manushig)
-[LinkedIn](https://linkedin.com/in/manushi-g)
-
----
-
-_For issues or questions, please open a GitHub issue or contact me directly._
-
----
-
-**Summary:**
-With this structure, the “Known Limitations” section introduces real-world caveats, and the “Smile Detection Parameters & False Positives” table is nested right there, making your README both concise and logically organized for interviewers and reviewers. Let me know if you want the table or any section reworded or tailored further!
