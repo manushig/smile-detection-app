@@ -65,7 +65,7 @@ describe("SmileDetails", () => {
     );
     expect(screen.getByText(/😊 smile detected!/i)).toBeInTheDocument();
     expect(
-      screen.getByText(/region: \[5, 10\] — 20×8 px/i)
+      screen.getByText(/smile: top-left \[5, 10\], size: 20×8 px/i)
     ).toBeInTheDocument();
   });
 
@@ -81,7 +81,7 @@ describe("SmileDetails", () => {
     );
     expect(screen.getByText(/😊 smile detected!/i)).toBeInTheDocument();
     expect(
-      screen.getByText(/region 1: \[7, 9\] — 14×18 px/i)
+      screen.getByText(/smile: top-left \[7, 9\], size: 14×18 px/i)
     ).toBeInTheDocument();
   });
 
@@ -96,10 +96,10 @@ describe("SmileDetails", () => {
     render(<SmileDetails coords={coords} smileDetected={true} />);
     expect(screen.getByText(/😊 smile detected!/i)).toBeInTheDocument();
     expect(
-      screen.getByText(/region 1: \[1, 2\] — 3×4 px/i)
+      screen.getByText(/smile 1: top-left \[1, 2\], size: 3×4 px/i)
     ).toBeInTheDocument();
     expect(
-      screen.getByText(/region 2: \[5, 6\] — 7×8 px/i)
+      screen.getByText(/smile 2: top-left \[5, 6\], size: 7×8 px/i)
     ).toBeInTheDocument();
   });
 
