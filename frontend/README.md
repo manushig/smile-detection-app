@@ -27,7 +27,7 @@ Captures images via webcam (handled by backend), displays detected smiles with b
 ## UI Screenshot
 
 <p align="center">
-  <img src="../documents/UI_Screenshot.png" alt="Smile Detection App UI Screenshot" width="700"/>
+  <img src="../documents/UI_Screenshot.png" alt="Smile Detection App UI Screenshot" width="700"/> 
 </p>
 
 > _Screenshot of the Smile Detection App in action, showing real-time webcam feed, detected smile bounding box, and region details._

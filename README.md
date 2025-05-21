@@ -21,6 +21,29 @@ This project follows a modular, industry-standard architecture for clear separat
 
 ---
 
+## Video Walkthroughs
+
+Watch the project in action:
+
+<table>
+  <tr>
+    <td width="50%" align="center">
+      <b>Project Overview & Architecture</b><br>
+      <a href="https://youtu.be/4u431xpv9kQ" target="_blank">
+        <img src="https://img.youtube.com/vi/4u431xpv9kQ/0.jpg" width="350" alt="Project Overview Video"/>
+      </a>
+    </td>
+    <td width="50%" align="center">
+      <b>Live Demo</b><br>
+      <a href="https://youtu.be/P5nDVEO3Xog" target="_blank">
+        <img src="https://img.youtube.com/vi/P5nDVEO3Xog/0.jpg" width="350" alt="Live Demo Video"/>
+      </a>
+    </td>
+  </tr>
+</table>
+
+---
+
 ## API Flow
 
 Below is a step-by-step overview of the key API endpoints and their flow:
@@ -255,7 +278,3 @@ poetry run pytest    # Runs all Pytest unit and integration tests
 _For any questions or issues, please open an issue on GitHub or contact the author directly._
 
 ---
-
-```
-
-```

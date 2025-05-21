@@ -9,9 +9,17 @@ import React from "react";
  */
 function formatRegion(coords) {
   if (Array.isArray(coords) && coords.length > 0) {
+    if (coords.length === 1) {
+      const box = coords[0];
+      return [
+        `Smile: Top-left [${box.x}, ${box.y}], Size: ${box.w}×${box.h} px`,
+      ];
+    }
     return coords.map(
       (box, idx) =>
-        `Region ${idx + 1}: [${box.x}, ${box.y}] — ${box.w}×${box.h} px`
+        `Smile ${idx + 1}: Top-left [${box.x}, ${box.y}], Size: ${box.w}×${
+          box.h
+        } px`
     );
   }
   if (
@@ -22,11 +30,12 @@ function formatRegion(coords) {
     "w" in coords &&
     "h" in coords
   ) {
-    return [`Region: [${coords.x}, ${coords.y}] — ${coords.w}×${coords.h} px`];
+    return [
+      `Smile: Top-left [${coords.x}, ${coords.y}], Size: ${coords.w}×${coords.h} px`,
+    ];
   }
   return [];
 }
-
 /**
  * SmileDetails component
  * Displays smile detection result regions or fallback if not detected.
